@@ -15,11 +15,13 @@ import {
 const getUserId = () => {
   // Try localStorage first
   let id = localStorage.getItem("userID");
+  console.log('function call')
 
   // If not found in localStorage, try query params
-  if (!id) {
+  if (id) {
     const params = new URLSearchParams(window.location.search);
     id = params.get("userID");
+    console.log('params1',id)
     if (id) {
       localStorage.setItem("userID", id); // save for next time
     }
@@ -34,9 +36,9 @@ function App() {
   const [sessionId, setSessionId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [userId,setUserId] = useState('')
 
-  const USER_ID = getUserId(); // dynamically determined
-
+  
   // Example suggestions (can be dynamic later)
   const suggestions = [
     "Show my last 3 investments",
@@ -44,16 +46,20 @@ function App() {
     "How much should I save monthly?",
     "Summarize my financial status",
   ];
-
+  
+  
+  
   useEffect(() => {
+    const USER_ID = getUserId(); 
     if (USER_ID) {
+      setUserId(USER_ID)
       loadData(USER_ID);
       fetchSessions();
     }
-  }, [USER_ID]);
+  }, [userId]);
 
   const fetchSessions = async () => {
-    const res = await getSessions(USER_ID);
+    const res = await getSessions(userId);
     setSessions(res.data.sessions);
   };
 
@@ -64,7 +70,7 @@ function App() {
 
     try {
       const res = await askQuestion({
-        user_id: USER_ID,
+        user_id: userId,
         question: text,
         session_id: sessionId,
       });
@@ -81,7 +87,7 @@ function App() {
 
   const loadHistory = async (sid) => {
     setSessionId(sid);
-    const res = await getChatHistory(USER_ID, sid);
+    const res = await getChatHistory(userId, sid);
     const hist = res.data.history
       .map((c) => [
         { sender: "user", text: c.question },
@@ -103,7 +109,7 @@ function App() {
           sessions={sessions}
           onSelect={loadHistory}
           active={sessionId}
-          userId={USER_ID}
+          userId={userId}
           refresh={fetchSessions}
           onClose={() => setSidebarOpen(false)}
           onNewChat={handleNewChat}

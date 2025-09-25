@@ -4,6 +4,7 @@ import ChatInput from "./components/ChatInput";
 import Sidebar from "./components/Sidebar";
 import { Menu } from "lucide-react"; // or any icon you like
 import Suggestions from "./components/Suggestions";
+
 import {
   askQuestion,
   getSessions,
@@ -12,16 +13,14 @@ import {
 } from "./api/api";
 
 // Function to get USER_ID dynamically from localStorage or query params
-const getUserId = () => {
+export const getUserId = () => {
   // Try localStorage first
   let id = localStorage.getItem("userID");
-  console.log('function call')
 
   // If not found in localStorage, try query params
-  if (id) {
+  if (!id) {
     const params = new URLSearchParams(window.location.search);
     id = params.get("userID");
-    console.log('params1',id)
     if (id) {
       localStorage.setItem("userID", id); // save for next time
     }
@@ -36,30 +35,25 @@ function App() {
   const [sessionId, setSessionId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [userId,setUserId] = useState('')
 
-  
+  const USER_ID = getUserId(); // dynamically determined
+
   // Example suggestions (can be dynamic later)
   const suggestions = [
-    "Show my last 3 investments",
     "What’s my risk profile?",
     "How much should I save monthly?",
     "Summarize my financial status",
   ];
-  
-  
-  
+
   useEffect(() => {
-    const USER_ID = getUserId(); 
     if (USER_ID) {
-      setUserId(USER_ID)
       loadData(USER_ID);
       fetchSessions();
     }
-  }, [userId]);
+  }, [USER_ID]);
 
   const fetchSessions = async () => {
-    const res = await getSessions(userId);
+    const res = await getSessions(USER_ID);
     setSessions(res.data.sessions);
   };
 
@@ -70,7 +64,7 @@ function App() {
 
     try {
       const res = await askQuestion({
-        user_id: userId,
+        user_id: USER_ID,
         question: text,
         session_id: sessionId,
       });
@@ -87,7 +81,7 @@ function App() {
 
   const loadHistory = async (sid) => {
     setSessionId(sid);
-    const res = await getChatHistory(userId, sid);
+    const res = await getChatHistory(USER_ID, sid);
     const hist = res.data.history
       .map((c) => [
         { sender: "user", text: c.question },
@@ -109,7 +103,7 @@ function App() {
           sessions={sessions}
           onSelect={loadHistory}
           active={sessionId}
-          userId={userId}
+          userId={USER_ID}
           refresh={fetchSessions}
           onClose={() => setSidebarOpen(false)}
           onNewChat={handleNewChat}

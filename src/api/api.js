@@ -15,3 +15,4 @@ export const deleteSession = (userId, sessionId) =>
 
 export const renameSession = (userId, sessionId, title) =>
   API.put(`/chat-sessions/${userId}/${sessionId}`, { title });
+export const getUserName = (userId) => API.get(`/user-name/${userId}`);

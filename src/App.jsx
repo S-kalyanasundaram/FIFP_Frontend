@@ -18,7 +18,7 @@ export const getUserId = () => {
   let id = localStorage.getItem("userID");
 
   // If not found in localStorage, try query params
-  if (id) {
+  if (!id) {
     const params = new URLSearchParams(window.location.search);
     id = params.get("userID");
     if (id) {
@@ -40,7 +40,7 @@ function App() {
 
   // Example suggestions (can be dynamic later)
   const suggestions = [
-    "What’s my risk profile?",
+    "Best Mutual Fund for me?",
     "How much should I save monthly?",
     "Summarize my financial status",
   ];

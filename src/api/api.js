@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://fifpbackendser-production.up.railway.app/",
+  baseURL: "https://api.fifpclub.com/fifpchatbot/",
 });
 
 export const loadData = (userId) => API.post(`/load-data/${userId}`);

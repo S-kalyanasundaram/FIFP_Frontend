@@ -27,7 +27,7 @@ export default function ChatWindow({ messages, loading }) {
       {messages.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full text-center text-gray-700">
           <img className="w-20 h-20" src="fifp_logo.png" alt="" />
-          <h1 className="text-2xl font-semibold">Hello, {userName}</h1>
+          <h1 className="text-2xl font-semibold">HI,Hello, {userName}</h1>
           <p className="text-lg mt-2">I’m your personal Finance Assistant.</p>
           <p className="text-sm text-gray-500 mt-1">Ask me anything to get started!</p>
           
@@ -62,3 +62,4 @@ export default function ChatWindow({ messages, loading }) {
     </div>
   );
 }
+

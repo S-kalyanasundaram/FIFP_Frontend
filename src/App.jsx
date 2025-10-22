@@ -15,7 +15,7 @@ import {
 // Function to get USER_ID dynamically from localStorage or query params
 export const getUserId = () => {
   // Try localStorage first
-  let id = localStorage.getItem("userID");
+  let id
 
   // If not found in localStorage, try query params
   if (!id) {
